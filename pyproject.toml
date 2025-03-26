@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "un_believable"
+version = "0.1.0"
+description = "A poetry project to recognize Tony Hinchcliffe's voice and catchphrases in Kill Tony episodes."
+authors = ["akomizatreba <akomizatreba@gmail.com.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "un_believable", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+pytube = "^15.0.0"
+librosa = "^0.10.1"
+scikit-learn = "^1.4.0"
+soundfile = "^0.13.1"
+click = "^8.1.7"
+whisperx = "=3.3.1"
+# Add more dependencies as needed (e.g., for more advanced audio processing)
+google-auth = "^2.38.0"
+google-auth-oauthlib = "^1.2.1"
+google-auth-httplib2 = "^0.2.0"
+google-api-python-client = "^2.165.0"
+psycopg2-binary = "^2.9.10"
+tensorflow = "^2.19.0"
+silero-vad = "^5.1.2"
+pydub = "^0.25.1"
+praw = "^7.8.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+un_believable = "un_believable.main:main"
