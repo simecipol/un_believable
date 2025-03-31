@@ -1,6 +1,7 @@
 # un_believable/src/un_believable/cli.py
 import json
 import click
+import time
 
 from .utils.config import COUNT_DOWNLOAD_DATA_BASE_DIR
 from .utils.downloader import download_audio
@@ -9,7 +10,6 @@ from .youtube.main import post_comment, extract_video_id
 from .worker.count import count as worker_count
 from .utils.db import Episode, Comment, write, init_db
 from .utils.logger import init as logger
-from .youtube.main import generate_comment
 from .reddit.main import post as post_to_reddit
 logger = logger()
 
@@ -33,6 +33,7 @@ def count(youtube_link, hf_token):
     """Downloads audio from a YouTube Short, attempts diarization, and counts catchphrases per speaker."""
     audio_path = download_audio(youtube_link, output_dir=COUNT_DOWNLOAD_DATA_BASE_DIR)
     tony_counts = worker_count(audio_path, hf_token)
+    st = time.time()
     if tony_counts:
         init_db()
         episode = write(Episode(
@@ -41,7 +42,7 @@ def count(youtube_link, hf_token):
             is_validation=False,
             **{k.replace(" ", "_"): v for k, v in tony_counts.items()}
         ))
-        comment_youtube_id, title = post_comment(youtube_link, tony_counts)
-        # episode_name="" #TBD
-        # post_to_reddit(tony_counts, episode_name, youtube_link)
+        comment_youtube_id, episode_name = post_comment(youtube_link, tony_counts)
+        post_to_reddit(tony_counts, episode_name, youtube_link)
         logger.info(json.dumps(tony_counts))
+        logger.info(f"Total time {time.time() - st} seconds.")

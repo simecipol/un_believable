@@ -22,7 +22,7 @@ def count(audio_path: str, hf_token: str) -> Dict:
         logger.info(f"Checking {file}'s probability of being Tony")
         features = extract_features(file)
         prediction, probability = voice_model.predict(features)
-        logger.debug(f"{speaker}/{file}: {prediction}/{probability}")
+        logger.info(f"Prediction for {speaker}: {prediction}/{probability}")
         if prediction == LABEL_TONY:
             predictions[speaker] = probability
 

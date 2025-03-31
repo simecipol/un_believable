@@ -32,7 +32,7 @@ def post(phrase_counts: dict, episode_name: str, episode_link: str):
         password=config["password"]
     )
 
-    subreddit = reddit.subreddit("Killtony") 
+    subreddit = reddit.subreddit("test") 
 # body = """Hey degenerates,
 
 # 🤡 Ever wondered just how many times Tony Hinchcliffe says “Un-believable!” or "Ohh my gooood" or any other nonsense phrase in an episode? Probably not. But I did, so I built a bot to track it for you.

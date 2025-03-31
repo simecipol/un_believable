@@ -1,4 +1,5 @@
 import os
+import time
 import torch
 import torchaudio
 import whisperx
@@ -18,22 +19,24 @@ class PhraseDetector:
 
     def count_phrases(self, audio_path: str) -> dict[str, dict[str, int]]:
         """Transcribes the audio with diarization and counts catchphrases per speaker."""
+        st = time.time()
         audio = whisperx.load_audio(audio_path)
+        logger.info("Starting transcription. This may take a while...")
         result = self.stt_model.transcribe(audio)
-        logger.debug(f"Transcribed: {result}")
+        logger.debug(f"Transcription complete. Took: {time.time()-st} seconds.")
         phrase_counts_by_speaker = defaultdict(int)
+        logger.info("Starting to count phrases.")
         for segment in result.get('segments', []):
-            logger.debug(f"Counting: {segment}")
             transcribed_text = segment.get('text', '').lower() 
-            logger.debug(f"transcribed_text: {transcribed_text}")
             for phrase in CATCHPHRASES:
                 phrase_counts_by_speaker[phrase] += transcribed_text.count(phrase.lower())
-        logger.debug(f"returning: {phrase_counts_by_speaker}")
         return phrase_counts_by_speaker
 
     def split_audio_by_speaker(self, audio_path):
+        st = time.time()
         waveform, sample_rate = torchaudio.load(audio_path)
         audio = whisperx.load_audio(audio_path)
+        logger.info("Starting diarization. This may take a while...")
         diarization_result = self.diarize_model(audio, min_speakers=10)
         speaker_audio = {}
         splits = {}
@@ -56,4 +59,5 @@ class PhraseDetector:
             logger.debug(f"Saved {output_path}")
             splits[speaker] = output_path
 
+        logger.info(f"Diarization complete. Took: {time.time() - st} seconds.")
         return splits
