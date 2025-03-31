@@ -36,7 +36,7 @@ It counts occurrences and posts a summary as a YouTube comment + a r/KillTony po
 ## Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/unbelievable-tony.git
+git clone https://github.com/simecipol/un_believable.git
 cd unbelievable-tony
 
 # Install dependencies
