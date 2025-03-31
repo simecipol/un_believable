@@ -20,7 +20,8 @@ def generate_comment(phrase_counts: dict) -> str:
         "",
         "\n".join(f"✅ {p}" for p in phrases),
         "",
-        "If Tony says it, I count it. If I miss one, you're too sober. 🍻"
+        "If Tony says it, I count it. If I miss one, you're too sober. 🍻",
+        "🙌 Feel free to contribute to me: https://github.com/simecipol/un_believable 🤗"
     ]
 
     return "\n".join(comment)

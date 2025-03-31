@@ -16,7 +16,8 @@ def generate_post(phrase_counts: dict, episode_name: str, episode_link: str) -> 
         "",
         "\n".join(f"✅ {p}" for p in phrases),
         "",
-        "If Tony says it, I count it. If I miss one, you're too sober. 🍻"
+        "If Tony says it, I count it. If I miss one, you're too sober. 🍻",
+        "🙌 Feel free to contribute to me: https://github.com/simecipol/un_believable 🤗"
     ]
 
     return title, "\n".join(comment)
