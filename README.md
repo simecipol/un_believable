@@ -22,6 +22,7 @@ It counts occurrences and posts a summary as a YouTube comment + a r/KillTony po
 - Uses WhisperX for speech-to-text and speaker diarization
 - Uses a keras model to detect Tony's voice
 - Posts a humorous summary as a YouTube comment and a reddit post
+- Uses [temporal.io](https://github.com/temporalio/temporal) for workflowing
 
 ## How It Works
 1. The bot downloads the audio of an episode of *Kill Tony*.
@@ -33,7 +34,7 @@ It counts occurrences and posts a summary as a YouTube comment + a r/KillTony po
 5. It generates a fun comment summarizing the count.
 6. The comment is posted to YouTube and reddit automatically.
 
-## Installation
+## Installation 
 ```bash
 # Clone the repository
 git clone https://github.com/simecipol/un_believable.git
@@ -46,10 +47,48 @@ poetry env use 3.12
 poetry install
 ```
 
+## Run the dependencies
+
+```bash
+docker-compose up -d
+# starts temporalio and a temporalio worker
+```
+## Obtaining credentials
+
+
+# Hugging face
+A hugging face token is needed, obtain it from https://huggingface.co/security-checkup?next=%2Fsettings%2Ftokens and set it in .env or export it (`HF_TOKEN`)
+
+# Youtube API
+- Go to the Google Cloud Console
+- Create a new project
+- Enable the YouTube Data API v3
+- Create API credentials (OAuth 2.0 client ID)
+- Download the credentials.json file
+
+# Reddit
+- Go to https://www.reddit.com/prefs/apps
+- Create a new developer application (script)
+- Create a reddit.json file in the form of 
+```json
+{
+    "client_secret": "",
+    "client_id": "",
+    "user_agent": "put_anything_that_you_want",
+    "username": "",
+    "password": "."
+}
+```
+
 ## Usage
 ```bash
-un_believable count --youtube-link https://www.youtube.com/watch\?v\=z-21SI0mtv4 --hf-token hf_token
+docker compose run un_believable poetry run un_believable count --youtube-link  "https://www.youtube.com/shorts/Z4iTiRgRVKI"
+# change yt video link to an episode or shorts
 ```
+
+## Progress tracking
+Use the temporal.io ui (http://localhost:8080)
+
 ## Example output
 ```
 {

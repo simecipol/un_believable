@@ -14,13 +14,13 @@ def generate_post(phrase_counts: dict, episode_name: str, episode_link: str) -> 
         "🔥 Kill Tony Un-believable Bot is in the house! 🔥",
         f"Here's a Tony-isms breakdown for [{episode_name}]({episode_link})",
         "",
-        "\n".join(f"✅ {p}" for p in phrases),
+        "\n".join(f"* ✅ {p}" for p in phrases),
         "",
         "If Tony says it, I count it. If I miss one, you're too sober. 🍻",
         "🙌 Feel free to contribute to me: https://github.com/simecipol/un_believable 🤗"
     ]
 
-    return title, "\n".join(comment)
+    return title, "\n\n".join(comment)
 def post(phrase_counts: dict, episode_name: str, episode_link: str):
     with open("reddit.json", "r") as file:
         config = json.load(file)

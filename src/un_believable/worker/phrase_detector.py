@@ -1,8 +1,10 @@
+import json
 import os
 import time
 import torch
 import torchaudio
 import whisperx
+
 from ..utils.config import CATCHPHRASES, AUDIO_SPLITS_BASE__DIR
 import soundfile as sf
 from ..utils.logger import init
@@ -11,19 +13,26 @@ from ..utils.logger import init as logger
 
 logger = logger()
 
-
 class PhraseDetector:
-    def __init__(self, model_name="large-v2", device="cpu", compute_type="float32", hf_token=""):
+    def __init__(self, model_name="large-v2", device="cpu", compute_type="float32", hf_token=os.getenv("HF_TOKEN", "")):
         self.stt_model = whisperx.load_model(model_name, device, compute_type=compute_type)
         self.diarize_model = whisperx.DiarizationPipeline(use_auth_token=hf_token, device=device)
 
-    def count_phrases(self, audio_path: str) -> dict[str, dict[str, int]]:
-        """Transcribes the audio with diarization and counts catchphrases per speaker."""
+    def transcribe(self, file_path: str, output_path: str = ""):
         st = time.time()
-        audio = whisperx.load_audio(audio_path)
+        audio = whisperx.load_audio(file_path)
         logger.info("Starting transcription. This may take a while...")
         result = self.stt_model.transcribe(audio)
         logger.debug(f"Transcription complete. Took: {time.time()-st} seconds.")
+        if output_path != "":
+            logger.info(f"Saving output of transcription to {output_path}")
+            with open(output_path, 'w') as fp:
+                json.dump(result, fp)
+        return result
+
+    def count_phrases(self, audio_path: str) -> dict[str, dict[str, int]]:
+        """Transcribes the audio with diarization and counts catchphrases per speaker."""
+        result = self.transcribe(file_path=audio_path)
         phrase_counts_by_speaker = defaultdict(int)
         logger.info("Starting to count phrases.")
         for segment in result.get('segments', []):

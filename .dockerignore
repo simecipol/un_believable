@@ -1,0 +1,5 @@
+audio/*
+credentials.json
+.venv/*
+**/__pycache__/
+reddit.json

@@ -6,7 +6,7 @@ from ..utils.logger import init as logger
 logger = logger()
 import pandas
 
-def learn(tony_links_file: str, not_tony_links_file: str):
+def train(tony_links_file: str, not_tony_links_file: str):
     voice_model = VoiceModel()
     tony_data = pandas.read_csv(tony_links_file)
     tony_data.fillna("", inplace=True)

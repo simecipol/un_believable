@@ -25,6 +25,8 @@ tensorflow = "^2.19.0"
 silero-vad = "^5.1.2"
 pydub = "^0.25.1"
 praw = "^7.8.1"
+temporalio = "^1.10.0"
+psutil = "^7.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.2"

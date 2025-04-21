@@ -1,7 +1,10 @@
 import os
+import random
+import string
 import numpy as np
 from sklearn.model_selection import train_test_split
-from ..utils.config import VOICE_MODEL_PATH, TRAINING_DATA_BASE_DIR
+from pydub import AudioSegment
+from ..utils.config import AUDIO_SPLITS_BASE__DIR, VOICE_MODEL_PATH, TRAINING_DATA_BASE_DIR
 from .audio_processor import extract_features
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -71,3 +74,26 @@ class VoiceModel:
             return prediction, probability
         else:
             return "Unknown", 0.0
+    
+    def find_and_merge_tony(self, splits: dict, id: str) -> dict:
+        self.load()
+        predictions = {}
+        for speaker, file in splits.items():
+            logger.info(f"Checking {file}'s probability of being Tony")
+            features = extract_features(file)
+            prediction, probability = self.predict(features)
+            logger.info(f"Prediction for {speaker}: {prediction}/{probability}")
+            if prediction == LABEL_TONY:
+                predictions[speaker] = probability
+        path = ""
+        if predictions:
+            if len(predictions.items()) > 1:
+                splits = [AudioSegment.from_wav(splits[k]) for k in predictions.keys()]
+                combined = sum(splits)
+                path = f"{AUDIO_SPLITS_BASE__DIR}/concat-{id}-{''.join(random.choices(string.ascii_letters, k=10))}.wav"
+                logger.info(f"There are {len(predictions.items())} speakers with predictions to be tony. Joining them into {path}")
+                combined.export(path, format="wav")
+            else: 
+                logger.info(f"The only positibe prediction to be tony is {next(iter(predictions))}")
+                path = splits[next(iter(predictions))]
+        return path
